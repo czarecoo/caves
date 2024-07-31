@@ -1,0 +1,8 @@
+example/CAV.OUT
+target/
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
