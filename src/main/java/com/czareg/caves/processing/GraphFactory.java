@@ -11,6 +11,10 @@ import java.util.List;
 @UtilityClass
 public class GraphFactory {
 
+    private static final double EASY_CORRIDOR_WEIGHT = 1.0;
+    private static final double DIFFICULT_CORRIDOR_WEIGHT = 10.0;
+    private static final double NON_EXISTING_CORRIDOR_WEIGHT = 100_000.0;
+
     public static Graph<Integer, DefaultWeightedEdge> create(List<String> inputLines) {
         Graph<Integer, DefaultWeightedEdge> graph = new DefaultUndirectedWeightedGraph<>(DefaultWeightedEdge.class);
 
@@ -26,21 +30,27 @@ public class GraphFactory {
             int firstRoom = lineValues[0];
             int secondRoom = lineValues[1];
             int difficulty = lineValues[2];
-            double weight = difficulty == 0 ? 1.0 : 10.0;
+            double weight = getWeight(difficulty);
             graph.setEdgeWeight(graph.addEdge(firstRoom, secondRoom), weight);
         }
 
-        // Ensure the graph is complete by adding missing edges with a high weight
-        double maxDifficulty = 100_000.0; // Arbitrary high value for missing edges
+        addMissingEdgesWithHighWeightToEnsureGraphIsComplete(allRooms, graph);
+
+        return graph;
+    }
+
+    private static double getWeight(int difficulty) {
+        return difficulty == 0 ? EASY_CORRIDOR_WEIGHT : DIFFICULT_CORRIDOR_WEIGHT;
+    }
+
+    private static void addMissingEdgesWithHighWeightToEnsureGraphIsComplete(int allRooms, Graph<Integer, DefaultWeightedEdge> graph) {
         for (int i = 1; i <= allRooms; i++) {
             for (int j = 1; j <= allRooms; j++) {
                 if (i != j && !graph.containsEdge(i, j)) {
-                    graph.setEdgeWeight(graph.addEdge(i, j), maxDifficulty);
+                    graph.setEdgeWeight(graph.addEdge(i, j), NON_EXISTING_CORRIDOR_WEIGHT);
                 }
             }
         }
-
-        return graph;
     }
 
     private static int[] readIntegersFromLine(String line) {

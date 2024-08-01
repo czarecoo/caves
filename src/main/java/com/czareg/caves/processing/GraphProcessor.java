@@ -14,11 +14,15 @@ import java.util.stream.Collectors;
 @UtilityClass
 public class GraphProcessor {
 
+    private static final int NEAREST_NEIGHBOR_PASSES = 100;
+    private static final Integer STARTING_VERTEX = 1;
+    private static final double MIN_COST_IMPROVEMENT = 1.0;
+
     public static String process(Graph<Integer, DefaultWeightedEdge> graph) {
         HamiltonianCycleAlgorithm<Integer, DefaultWeightedEdge> solver = new TwoOptHeuristicTSP<>(
-                100,
-                new NearestNeighborHeuristicTSP<>(Integer.valueOf(1)),
-                1.0);
+                NEAREST_NEIGHBOR_PASSES,
+                new NearestNeighborHeuristicTSP<>(STARTING_VERTEX),
+                MIN_COST_IMPROVEMENT);
 
         GraphPath<Integer, DefaultWeightedEdge> tour = solver.getTour(graph);
 
