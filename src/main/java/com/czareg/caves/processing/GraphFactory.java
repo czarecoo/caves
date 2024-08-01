@@ -30,7 +30,7 @@ public class GraphFactory {
             int firstRoom = lineValues[0];
             int secondRoom = lineValues[1];
             int difficulty = lineValues[2];
-            double weight = getWeight(difficulty);
+            double weight = adjustWeight(difficulty);
             graph.setEdgeWeight(graph.addEdge(firstRoom, secondRoom), weight);
         }
 
@@ -39,7 +39,13 @@ public class GraphFactory {
         return graph;
     }
 
-    private static double getWeight(int difficulty) {
+    private static int[] readIntegersFromLine(String line) {
+        return Arrays.stream(line.trim().split(" "))
+                .mapToInt(Integer::parseInt)
+                .toArray();
+    }
+
+    private static double adjustWeight(int difficulty) {
         return difficulty == 0 ? EASY_CORRIDOR_WEIGHT : DIFFICULT_CORRIDOR_WEIGHT;
     }
 
@@ -51,11 +57,5 @@ public class GraphFactory {
                 }
             }
         }
-    }
-
-    private static int[] readIntegersFromLine(String line) {
-        return Arrays.stream(line.trim().split(" "))
-                .mapToInt(Integer::parseInt)
-                .toArray();
     }
 }
