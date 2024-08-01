@@ -26,14 +26,15 @@ public class GraphFactory {
             int firstRoom = lineValues[0];
             int secondRoom = lineValues[1];
             int difficulty = lineValues[2];
-            graph.setEdgeWeight(graph.addEdge(firstRoom, secondRoom), difficulty);
+            double weight = difficulty == 0 ? 1.0 : 10.0;
+            graph.setEdgeWeight(graph.addEdge(firstRoom, secondRoom), weight);
         }
 
         // Ensure the graph is complete by adding missing edges with a high weight
-        int maxDifficulty = 1000; // Arbitrary high value for missing edges
+        double maxDifficulty = 100_000.0; // Arbitrary high value for missing edges
         for (int i = 1; i <= allRooms; i++) {
-            for (int j = i + 1; j <= allRooms; j++) {
-                if (!graph.containsEdge(i, j)) {
+            for (int j = 1; j <= allRooms; j++) {
+                if (i != j && !graph.containsEdge(i, j)) {
                     graph.setEdgeWeight(graph.addEdge(i, j), maxDifficulty);
                 }
             }
