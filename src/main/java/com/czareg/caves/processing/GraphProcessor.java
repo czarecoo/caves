@@ -2,7 +2,6 @@ package com.czareg.caves.processing;
 
 import lombok.experimental.UtilityClass;
 import org.jgrapht.Graph;
-import org.jgrapht.GraphPath;
 import org.jgrapht.alg.interfaces.HamiltonianCycleAlgorithm;
 import org.jgrapht.alg.tour.NearestNeighborHeuristicTSP;
 import org.jgrapht.alg.tour.TwoOptHeuristicTSP;
@@ -24,9 +23,7 @@ public class GraphProcessor {
                 new NearestNeighborHeuristicTSP<>(STARTING_VERTEX),
                 MIN_COST_IMPROVEMENT);
 
-        GraphPath<Integer, DefaultWeightedEdge> tour = solver.getTour(graph);
-
-        List<Integer> cycle = tour.getVertexList();
+        List<Integer> cycle = solver.getTour(graph).getVertexList();
         // cycle to path
         cycle.removeLast();
 
@@ -35,6 +32,10 @@ public class GraphProcessor {
             cycle.add(cycle.removeFirst());
         }
 
+        return toString(cycle);
+    }
+
+    private static String toString(List<Integer> cycle) {
         return cycle.stream()
                 .map(String::valueOf)
                 .collect(Collectors.joining(" "));
